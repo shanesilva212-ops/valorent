@@ -1,43 +1,45 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import "./Navbar.css";
+import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { assets } from '../assets/assets'
+import { MenuIcon, X } from 'lucide-react'
 
-function Navbar() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+const Navbar = () => {
 
-  const handleAuthButton = () => {
-    if (user) {
-      logout();
-      navigate("/");
-      return;
-    }
-
-    navigate("/login", { state: { from: location } });
-  };
+    const [menuOpen, setMenuOpen] = React.useState(false)
+    const navigate = useNavigate()
 
   return (
-    <header className="navbar">
-      <Link to="/" className="brand">
-        valo<span>rent.lk</span>
-      </Link>
+    <nav className='h-20'>
+        <div className='fixed left-0 top-0 right-0 z-100 flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-4 border-b border-gray-300 bg-white transition-all'>
+            <img onClick={() => {navigate('/'); scrollTo(0, 0)}} src={assets.logo} alt="logo" className='h-10 cursor-pointer' />
 
-      <nav className="nav-links">
-        <Link to="/">Home</Link>
-        <Link to="/marketplace">Marketplace</Link>
-        <Link to="/messages">Messages</Link>
-        <Link to="/my-listings">My Listings</Link>
-      </nav>
+            {/* Desktop Menu */}
+            <div className='hidden sm:flex items-center gap-4 md:gap-8 max-md:text-sm text-gray-800'>
+                <Link to='/' onClick={() => scrollTo(0, 0)}> Home </Link>
+                <Link to='/marketplace' onClick={() => scrollTo(0, 0)}> Marketplace </Link>
+                <Link to='/messages' onClick={() => scrollTo(0, 0)}> Messages </Link>
+                <Link to='/my-listings' onClick={() => scrollTo(0, 0)}> My Listings </Link>
+            </div>
 
-      <div className="navbar-right">
-        {user && <span className="welcome-text">Hi, {user.name}</span>}
-        <button className="login-button" onClick={handleAuthButton}>
-          {user ? "Logout" : "Login"}
-        </button>
-      </div>
-    </header>
-  );
+            <div>
+                <button className='max-sm:hidden cursor-pointer px-8 py-2 bg-red-500 hover:bg-red-600 transition text-white rounded-full'>Login</button>
+                <MenuIcon onClick={() => setMenuOpen(true)} className='sm:hidden'/>
+            </div>
+
+        </div>
+        {/* Mobile Menu */}
+        <div className={`sm:hidden fixed inset-0 ${menuOpen ? 'w-full' : 'w-0'} overflow-hidden bg-white backdrop-blur shadow-xl rounded-lg z-[200] text-sm transition-all`}>
+            <div className='flex flex-col items-center justify-center h-full text-xl font-semibold gap-6 p-4'>
+                <Link to='/marketplace' onClick={() => setMenuOpen(false)}> Marketplace </Link>
+                <button> Messages </button>
+                <button> My Listings </button>
+
+                <button className=' cursor-pointer px-8 py-2 bg-red-500 hover:bg-red-600 transition text-white rounded-full'>Login</button>
+                <X onClick={() => setMenuOpen(false)} className='absolute size-8 right-6 top-6 text-gray-500 hover:text-gray-700 cursor-pointer' />
+            </div>
+        </div>
+    </nav>
+  )
 }
 
-export default Navbar;
+export default Navbar
