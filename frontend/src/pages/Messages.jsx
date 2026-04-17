@@ -3,7 +3,7 @@ import React from 'react'
 const Messages = () => {
   return (
     <div>
-      <h1>Messages Page</h1>
+      <h1>Messages Pages!</h1>
     </div>
   )
 }
